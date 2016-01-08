@@ -1,21 +1,14 @@
 # partialCI
 R package for fitting the partially cointegrated model
 
-If you are working with two (or more) time series that are closely related yet
-not fully cointegrated, then the partially cointegrated model might be the answer.
-I developed this model because I thought it might be a useful way to describe
-similar stocks (such as Coca-Cola and Pepsi, or Ford and GM).
-
-Two time series P and Q are said to be cointegrated if they are each integrated
-and if there is some constant beta such that P - beta * Q is an autoregressive
-moving average (ARMA).  They are said to be partially cointegrated if there
-is some constant beta such that P - beta * Q contains both an ARMA component and
-a random walk component.  In this implementation, it's assumed that the ARMA
-component is actually AR(1).
-
+A collection of time series is said to be partially cointegrated if they have a linear
+combination that is partially autoregressive, e.g., that can be represented as a sum of an
+autoregressive series without unit roots and a random walk.  
 In other words, the series are partially cointegrated if the spread between
 them is a mean-reverting series that has possibly been contaminated with a 
 (hopefully small) random walk.
+This may be useful in modeling
+certain sets of financial time series.
 
 To use the partialCI package, you will need to start by installing it,
 which can be done using devtools:
@@ -60,6 +53,30 @@ it contains a small random walk component.  The mean-reverting
 component accounts for 86.3% of the variance of the daily returns.
 The value of 0.9055 for rho corresponds to a half-life of mean
 reversion of about 7 trading days.
+
+To test the goodness of fit, the test.pci function can be used:
+
+```
+> h <- yfit.pci("RDS-B", "RDS-A")
+> test.pci(h)
+
+	Likelihood ratio test of [Random Walk or CI(1)] vs Almost PCI(1) (joint penalty method)
+
+data:  h
+
+Hypothesis              Statistic    p-value
+Random Walk                 -4.94      0.010
+AR(1)                       -4.08      0.010
+Combined                               0.010
+}
+```
+
+The test.pci function tests each of two different null hypotheses:
+(a) the residual series is purely a random walk, and (b) the residual series is
+purely autoregressive.  In addition, the union of these hypothesis is
+also tested.  For practical applications, one is usually most interested in
+rejecting the first of these null hypotheses, e.g., that the residual series
+is purely a random walk.
 
 The partialCI package also contains a function for searching for
 hedging portfolios.  Given a particular stock (or time series),
