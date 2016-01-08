@@ -53,11 +53,11 @@ sigma_R      0.0993   0.0350
 ```
 
 This example was run on 1/7/2016.  RDS-A and RDS-B are two 
-classes of shares offered by Royal Dutch Shell which differ slightly
+classes of shares offered by Royal Dutch Shell that differ slightly
 in aspects of their tax treatment.  The above fit shows that
 the spread between the two shares is mostly mean-reverting but that
 it contains a small random walk component.  The mean-reverting
-component accounts of 86.3% of the variance of the daily returns.
+component accounts for 86.3% of the variance of the daily returns.
 The value of 0.9055 for rho corresponds to a half-life of mean
 reversion of about 7 trading days.
 
