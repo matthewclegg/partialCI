@@ -1,5 +1,5 @@
 # lrtables.R -- functions for building up tables of likelihood ratios
-# Copyright (C) 2015 Matthew Clegg
+# Copyright (C) 2016 Matthew Clegg
 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
