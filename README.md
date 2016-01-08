@@ -50,6 +50,7 @@ sigma_M      0.2431   0.0162
 sigma_R      0.0993   0.0350
 
 -LL = 41.30, R^2[MR] = 0.863
+```
 
 This example was run on 1/7/2016.  RDS-A and RDS-B are two 
 classes of shares offered by Royal Dutch Shell which differ slightly
@@ -66,6 +67,7 @@ a search can be conducted to find the set of stocks that best
 replicate the target stock.  In the following example, a hedge 
 is sought for SPY using sector ETF's.
 
+```
 > sectorETFS <- c("XLB", "XLE", "XLF", "XLI", "XLK", "XLP", "XLU", "XLV", "XLY")
 > prices <- multigetYahooPrices(c("SPY", sectorETFS), start=20140101)
 > hedge.pci(prices[,"SPY"], prices)
