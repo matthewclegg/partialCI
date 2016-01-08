@@ -1,0 +1,27 @@
+# exportPattern("^[[:alpha:]]+")
+import("zoo", "xts", "parallel", "ggplot2", "MASS", "tseries", "partialAR")
+importFrom("grid", grid.newpage, pushViewport, viewport, grid.layout)
+importFrom("glmnet", glmnet)
+importFrom("TTR", getYahooData)
+importFrom("data.table", setkey, setnames)
+
+export(fit.pci,
+       statehistory.pci,
+       hedge.pci,
+       loglik.pci,
+       likelihood_ratio.pci,
+       test.pci,
+       rpci,
+       which.hypothesis.pcitest,
+       yfit.pci,
+       yhedge.pci,
+       multigetYahooPrices
+       )
+  
+S3method(print, pci.fit)
+S3method(plot, pci.fit)
+S3method(as.data.frame, pci.fit)
+S3method(print, pcitest)
+# S3method(which.hypothesis, pcitest)
+S3method(print, pci.hedge)
+S3method(plot, pci.hedge)

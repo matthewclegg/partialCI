@@ -1,0 +1,14 @@
+Package: partialCI
+Type: Package
+Title: Partial Cointegration
+Version: 1.0.3
+Date: 2016-01-06
+Authors@R: c(person("Matthew", "Clegg", role=c("aut","cre","cph"),
+                    email="matthewcleggphd@gmail.com"))
+Description: A collection of time series is said to be partially cointegrated if they have a linear combination that is partially autoregressive, e.g., that can be represented as a sum of an autoregressive series without unit roots and a random walk.  This may be useful in modeling certain sets of financial time series.
+License: GPL-2 | GPL-3
+Depends: partialAR
+Imports: zoo, xts, parallel, ggplot2, grid, MASS, tseries, TTR,
+        data.table, glmnet
+Suggests: egcm
+
