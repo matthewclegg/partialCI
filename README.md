@@ -68,7 +68,7 @@ Hypothesis              Statistic    p-value
 Random Walk                 -4.94      0.010
 AR(1)                       -4.08      0.010
 Combined                               0.010
-}
+
 ```
 
 The test.pci function tests each of two different null hypotheses:
