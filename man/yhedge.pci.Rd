@@ -1,11 +1,11 @@
 \name{yhedge.pci}
 \alias{yhedge.pci}
 \title{
-Hedge portfolio for a stock price series.
+Hedge portfolio for a stock price series
 }
 \description{
 Computes the hedge of a stock price series fetched form Yahoo!
-using one or more other stock price series also fetched form Yahoo!.
+using one or more other stock price series also fetched form Yahoo!
 }
 \usage{
 yhedge.pci(target, factors, start, end, na.rm=FALSE, ...)
