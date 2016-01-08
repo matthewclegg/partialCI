@@ -20,17 +20,22 @@ them is a mean-reverting series that has possibly been contaminated with a
 To use the partialCI package, you will need to start by installing it,
 which can be done using devtools:
 
+```
 > install.packages("devtools")   # if devtools is not already installed
 > install_github("matthewclegg/partialCI")
-   
+```
+
 To find the partially cointegrated model that best fits two series 
 X and Y, use:
 
+```
 > fit.pci(Y, X)
-  
+```
+
 An interface to Yahoo! Finance permits you to find the best fits for
 two particular stocks of interest:
 
+```
 > yfit.pci("RDS-B", "RDS-A")
 Fitted values for PCI model
   Y[t] = alpha + X[t] %*% beta + M[t] + R[t]
@@ -84,6 +89,7 @@ sigma_M      0.2678   0.0315
 sigma_R      0.2056   0.0401
 
 -LL = 168.86, R^2[MR] = 0.662
+```
 
 The top table displays the quality of the fit that is found as each new
 factor is added to the fit.  The best fit consisting of only one factor
@@ -96,7 +102,11 @@ that SPY is at least partially cointegrated and possibly fully cointegrated
 with a portfolio consisting of XLF and XLK in the right proportions.  The
 best overall fit is obtained by also adding XLI (industrials) to the hedging
 portfolio.  The final fit is
+
+```
   SPY = $14.29 + 2.32 XLF + 1.65 XLK + 1.14 XLI
+```
+
 For this fit, the proportion of variance attributable to the mean reverting
 component is 66.2%, and the half life of mean reversion is about 2.2 days.
 
