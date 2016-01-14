@@ -111,7 +111,7 @@ pci.jointpenalty.guess <- function (Y, X) {
 }
 
 fit.pci.jointpenalty.rw <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y,X), 
-                                     robust=FALSE, nu=5) {
+                                     robust=FALSE, nu=5, pgtol=1e-8) {
     # On input, Y is an n x 1 column vector, and X is an n x k matrix.
     # Fits an PCI model to Y,X where the residual series is modeled as
     # a random walk.  Returns a three-component list:
@@ -144,7 +144,7 @@ fit.pci.jointpenalty.rw <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y
     rw.pmax <- c(Inf, rep(Inf, n), sdmax)
     highval <- rw.ofun(rw.p0) + 1.0
 
-    rw.val <- optim(rw.p0, rw.ofun, method="L-BFGS-B", lower=rw.pmin, upper=rw.pmax, hessian=TRUE)
+    rw.val <- optim(rw.p0, rw.ofun, method="L-BFGS-B", lower=rw.pmin, upper=rw.pmax, hessian=TRUE, control=list(pgtol=pgtol))
     rw.par <- c(rw.val$par[1:(n+1)], rho=0, sigma_M=0, sigma_R=rw.val$par[n+2], M0=0, R0=0)
     rw.se <- rep(NA_real_, nrow(rw.val$hessian))
     suppressWarnings(try(rw.se <- sqrt(diag(solve(rw.val$hessian))), silent=TRUE))
@@ -154,7 +154,7 @@ fit.pci.jointpenalty.rw <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y
 }
 
 fit.pci.jointpenalty.mr <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y,X), 
-                                     robust=FALSE, nu=5) {
+                                     robust=FALSE, nu=5, pgtol=1e-8) {
     # On input, Y is an n x 1 column vector, and X is an n x k matrix.
     # Fits an PCI model to Y,X where the residual series is modeled as
     # a pure AR(1) series.  Returns a three-component list:
@@ -194,8 +194,8 @@ fit.pci.jointpenalty.mr <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y
     mr.pmax <- c(Inf, rep(Inf, n), 1, 2.0 * rw.p0[n+3])
 
     highval <- max(mr.ofun(rw.p0), mr.ofun(mr.p0)) + 1
-    fit1 <- optim(rw.p0, mr.ofun, method="L-BFGS-B", lower=mr.pmin, upper=mr.pmax, hessian=TRUE)
-    fit2 <- optim(mr.p0, mr.ofun, method="L-BFGS-B", lower=mr.pmin, upper=mr.pmax, hessian=TRUE)
+    fit1 <- optim(rw.p0, mr.ofun, method="L-BFGS-B", lower=mr.pmin, upper=mr.pmax, hessian=TRUE, control=list(pgtol=pgtol))
+    fit2 <- optim(mr.p0, mr.ofun, method="L-BFGS-B", lower=mr.pmin, upper=mr.pmax, hessian=TRUE, control=list(pgtol=pgtol))
     fit <- if(fit1$value < fit2$value) fit1 else fit2
     
     mr.par <- c(fit$par[1:(n+3)], sigma_R=0, M0=0, R0=0)
@@ -208,7 +208,7 @@ fit.pci.jointpenalty.mr <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y
 }
 
 fit.pci.jointpenalty.both <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess(Y,X), 
-                                       robust=FALSE, nu=5) {
+                                       robust=FALSE, nu=5, pgtol=1e-8) {
     # On input, Y is an n x 1 column vector, and X is an n x k matrix.
     # Fits an PCI model to Y,X.  Returns a three-component list:
     #   par: The parameter estimates
@@ -231,6 +231,7 @@ fit.pci.jointpenalty.both <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess
     start_list <- list(p0[1:(n+4)], fit.rw$par[1:(n+4)], fit.mr$par[1:(n+4)], twostep.par)
 
     objective <- function (p) {
+#        print(p)
         alpha <- p[1]
         beta <- p[2:(n+1)]
         rho <- p[n+2]
@@ -242,8 +243,11 @@ fit.pci.jointpenalty.both <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess
         M0 <- 0
         R0 <- 0
         Z <- Y - X %*% beta - alpha
-        loglik.par (Z, rho, sigma_M, sigma_R, M0, R0, ll_calc_method, nu=nu) + lambda * sigma_R^2
+        ll <- loglik.par (Z, rho, sigma_M, sigma_R, M0, R0, ll_calc_method, nu=nu) + lambda * sigma_R^2
+#        print(c(p, ll))
+        ll
     }
+#    debug(objective)
 
     maxsig <- fit.rw$par[["sigma_R"]]
     pmin <- c(-Inf, rep(-Inf, n), -1, 0, 0)
@@ -252,7 +256,7 @@ fit.pci.jointpenalty.both <- function (Y, X, lambda=0, p0=pci.jointpenalty.guess
     best_value <- objective(start_list[[1]])+1
     for (start in start_list) {
         highval <- objective(start) + 1
-        rfit <- optim(start, objective, hessian=TRUE, method="L-BFGS-B", lower=pmin, upper=pmax)
+        rfit <- optim(start, objective, hessian=TRUE, method="L-BFGS-B", lower=pmin, upper=pmax,control=list(pgtol=pgtol))
         if (rfit$value < best_value) {
             bestfit <- rfit
             best_value <- rfit$value
