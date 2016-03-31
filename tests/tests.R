@@ -308,7 +308,7 @@ test_lr2 <- function(fast_only=FALSE) {
 }
 
 test_fit_twostep <- function (fast_only = FALSE) {
-    F <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT)
+    F <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT, include_alpha=TRUE)
     test("F$alpha", c(alpha=3.988743))
     test("F$beta", c(beta_BRENT=0.9014), tol=0.01)
     test("F$rho", c(rho=-0.002161227))
@@ -321,7 +321,29 @@ test_fit_twostep <- function (fast_only = FALSE) {
     test("F$negloglik", c(negloglik=436.6048))
     test("F$pvmr", c(pvmr=0.6972993))
 
-    FR <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT, robust=TRUE)
+    F0 <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT)
+    test("F0$beta", c(beta_BRENT=0.9014), tol=0.01)
+    test("F0$rho", c(rho=-0.002161227))
+    test("F0$sigma_M", c(sigma_M=0.8509465))
+    test("F0$sigma_R", c(sigma_R=0.7937507))
+    test("F0$rho.se", c(rho.se=0.1696716))
+    test("F0$sigma_M.se", c(sigma_M.se=0.1056687))
+    test("F0$sigma_R.se", c(sigma_R.se=0.111671))
+    test("F0$negloglik", c(negloglik=436.6048))
+    test("F0$pvmr", c(pvmr=0.6972993))
+
+    FR0 <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT, robust=TRUE)
+    test("FR0$beta", c(beta_BRENT=0.911297), tol=0.01)
+    test("FR0$rho", c(rho=-0.006326975))
+    test("FR0$sigma_M", c(sigma_M=0.6299893))
+    test("FR0$sigma_R", c(sigma_R=0.6845977))
+    test("FR0$rho.se", c(rho.se=0.180226))
+    test("FR0$sigma_M.se", c(sigma_M.se=0.09403069))
+    test("FR0$sigma_R.se", c(sigma_R.se=0.08726811))
+    test("FR0$negloglik", c(negloglik=429.9065))
+    test("FR0$pvmr", c(pvmr=0.6302378))
+    
+    FR <- partialCI:::fit.pci.twostep(OIL$WTI, OIL$BRENT, robust=TRUE, include_alpha=TRUE)
     test("FR$alpha", c(alpha=3.344333))
     test("FR$beta", c(beta_BRENT=0.911297), tol=0.01)
     test("FR$rho", c(rho=-0.006326975))
@@ -333,45 +355,81 @@ test_fit_twostep <- function (fast_only = FALSE) {
     test("FR$sigma_R.se", c(sigma_R.se=0.08726811))
     test("FR$negloglik", c(negloglik=429.9065))
     test("FR$pvmr", c(pvmr=0.6302378))
+
 }
 
 test_fit_jointpenalty <- function (fast_only = FALSE) {
   guess <- c(alpha = 22.415066, beta_BRENT = 0.67375332, rho=-0.04976431, 
              sigma_M=0.78760586, sigma_R=0.83733729, M0=0, R0=0)  
-  test("partialCI:::pci.jointpenalty.guess(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))", guess)
+  test("partialCI:::pci.jointpenalty.guess(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), include_alpha=TRUE)", guess)
+
+  guess0 <- structure(c(0.673753323158499, -0.0499696397350701, 0.787500882009433, 
+    0.837430798633094, 0, 22.4150662982716), .Names = c("beta_BRENT", 
+      "rho", "sigma_M", "sigma_R", "M0", "R0"))
+  test("partialCI:::pci.jointpenalty.guess(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))", guess0)
  
   rw.par <- structure(c(22.4150662982132, 0.673753316670566, 0, 0, 1.23155657754959, 0, 0), 
                       .Names = c("alpha", "beta_BRENT", "rho", "sigma_M", "sigma_R", "M0", "R0"))
-  
-  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", rw.par)  
+  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), include_alpha=TRUE)$par", rw.par)  
+
+  rw.par0 <- structure(c(0.673753316670566, 0, 0, 1.23155657754959, 0, 22.415066298274), 
+                      .Names = c("beta_BRENT", "rho", "sigma_M", "sigma_R", "M0", "R0"))
+  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", rw.par0) 
 
   mr.par <- structure(c(19.0448876678824, 0.707408539377214, 0.979236271148003, 
                         1.22640513769963, 0, 0, 0), 
                       .Names = c("alpha", "beta_BRENT", 
                                  "rho", "sigma_M", "sigma_R", "M0", "R0"))
-  test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", mr.par)  
+  test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT),include_alpha=TRUE)$par", mr.par)  
+
+  mr.par0 <- structure(c(0.704082607377607, 0.98035806173428, 1.22650034762294, 
+    0, 0, 19.1413233596611), .Names = c("beta_BRENT", "rho", "sigma_M", 
+      "sigma_R", "M0", "R0"))
+   test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", mr.par0)  
 
   both.par <- structure(c(14.5845792002844, 0.743252984476208, 0, 0.826758135981716, 
                           0.794395597894045, 0, 0), 
                         .Names = c("alpha", "beta_BRENT", "rho", 
                                    "sigma_M", "sigma_R", "M0", "R0"))
 
-  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", both.par, tol=0.05)  
+  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT),include_alpha=TRUE)$par", both.par, tol=0.05)  
+
+  both.par0 <- structure(c(0.743252984476208, 0, 0.826758135981716, 
+                          0.794395597894045, 0, 14.5845792002844), 
+                        .Names = c("beta_BRENT", "rho", 
+                                   "sigma_M", "sigma_R", "M0", "R0"))
+
+  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))$par", both.par0, tol=0.05)  
 
   rwrob.par <- structure(c(28.1949715154527, 0.620210939294621, 0, 0, 0.948726114365134, 
                            0, 0), .Names = c("alpha", "beta_BRENT", "rho", "sigma_M", "sigma_R", 
                                              "M0", "R0"))
-  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", rwrob.par)
+  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE, include_alpha=TRUE)$par", rwrob.par)
+
+  rwrob.par0 <- structure(c(0.620210939294621, 0, 0, 0.948726114365134, 
+                           0, 28.1949715154527), .Names = c("beta_BRENT", "rho", "sigma_M", "sigma_R", 
+                                             "M0", "R0"))
+  test("partialCI:::fit.pci.jointpenalty.rw(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", rwrob.par0)
   
   mrrob.par <- structure(c(28.1948554986119, 0.62081912655694, 0.993012863223067, 
                            0.948691236006445, 0, 0, 0), .Names = c("alpha", "beta_BRENT", 
                                                                    "rho", "sigma_M", "sigma_R", "M0", "R0"))
-  test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", mrrob.par)
+  test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE, include_alpha=TRUE)$par", mrrob.par)
   
+  mrrob.par0 <- structure(c(0.634017098277415, 0.992411921549702, 0.948914138555383, 
+    0, 0, 26.7041944119358), .Names = c("beta_BRENT", "rho", "sigma_M", 
+      "sigma_R", "M0", "R0"))
+  test("partialCI:::fit.pci.jointpenalty.mr(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", mrrob.par0)
+
   bothrob.par <- structure(c(20.098585528449, 0.692830550628575, 0, 0.599736912154181, 
                              0.67441954256228, 0, 0), .Names = c("alpha", "beta_BRENT", "rho", 
                                                                  "sigma_M", "sigma_R", "M0", "R0"))
-  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", bothrob.par, tol=0.05) 
+  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE, include_alpha=TRUE)$par", bothrob.par, tol=0.05) 
+
+  bothrob.par0 <- structure(c(0.692830550628575, 0, 0.599736912154181, 
+                             0.67441954256228, 0, 20.098585528449), .Names = c("beta_BRENT", "rho", 
+                                                                 "sigma_M", "sigma_R", "M0", "R0"))
+  test("partialCI:::fit.pci.jointpenalty.both(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), robust=TRUE)$par", bothrob.par0, tol=0.05) 
   
 }
 
@@ -388,26 +446,45 @@ test_fit <- function (fast_only = FALSE) {
   test("partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), par_model=\"ar1\", robust=TRUE)$negloglik", c(negloglik=439.6296))
   test("partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), par_model=\"rw\", robust=TRUE)$negloglik", c(negloglik=439.8615))
   
-  f <- partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))
+  f <- partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), include_alpha=TRUE)
   last_state <- structure(list(Y = 52.99, Yhat = 57.0022715118106, Z = -4.01227151181061, 
                                M = 0.359169355426614, R = -4.37144086723722, eps_M = 0.369402426645854, 
                                eps_R = 0.579553335373364), .Names = c("Y", "Yhat", "Z", 
                                                                       "M", "R", "eps_M", "eps_R"), row.names = "2015-02-09", class = "data.frame")
-  test("tail(partialCI:::statehistory.pci(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))),1)", last_state, tol=0.05)
-  
+  test("tail(partialCI:::statehistory.pci(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), include_alpha=TRUE)),1)", last_state, tol=0.05)
 
-  df <- structure(list(alpha = 14.6815264697762, beta_BRENT = 0.742469211263762, 
-                       rho = -0.0232417563016535, sigma_M = 0.816467892957924, sigma_R = 0.804940946187702, 
-                       M0 = 0, R0 = 0, alpha.se = 6.130582349069, beta_BRENT.se = 0.0559770928506369, 
-                       rho.se = 0.172263118614259, sigma_M.se = 0.108129156743508, 
-                       sigma_R.se = 0.109361499448158, M0.se = NA_real_, R0.se = NA_real_, 
-                       negloglik = 432.475807404799, pvmr = 0.67811021547102), .Names = c("alpha", 
-                                                                                          "beta_BRENT", "rho", "sigma_M", "sigma_R", "M0", "R0", "alpha.se", 
-                                                                                          "beta_BRENT.se", "rho.se", "sigma_M.se", "sigma_R.se", "M0.se", 
-                                                                                          "R0.se", "negloglik", "pvmr"), row.names = "alpha", class = "data.frame")
+   f0 <- partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT))
+  last_state0 <- structure(list(Y = 52.99, Yhat = 42.3231449335717, Z = 10.6668550664283, 
+    M = 0.355883860455669, R = 10.3109712059726, eps_M = 0.368030242920157, 
+    eps_R = 0.58348828109853), .Names = c("Y", "Yhat", "Z", "M", 
+     "R", "eps_M", "eps_R"), row.names = "2015-02-09", class = "data.frame")
+    
+  test("tail(partialCI:::statehistory.pci(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT),)),1)", last_state0, tol=0.05)
 
-  test("as.data.frame(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT)))", df, tol=0.05)
-  
+ 
+
+  df <- structure(list(alpha = 14.6829401164186, beta = 0.742455481013507, 
+    rho = -0.0232576651129888, sigma_M = 0.816415189337928, sigma_R = 0.804964566979587, 
+    M0 = 0, R0 = 0, alpha.se = 6.1306344674343, beta.se = 0.0559775667569459, 
+    rho.se = 0.172275543552826, sigma_M.se = 0.108139711899864, 
+    sigma_R.se = 0.109367951001435, M0.se = NA_real_, R0.se = NA_real_, 
+    negloglik = 432.475807192823, pvmr = 0.67807277837379), .Names = c("alpha", 
+"beta", "rho", "sigma_M", "sigma_R", "M0", "R0", "alpha.se", 
+"beta.se", "rho.se", "sigma_M.se", "sigma_R.se", "M0.se", "R0.se", 
+"negloglik", "pvmr"), row.names = "beta_BRENT", class = "data.frame")
+    
+  test("as.data.frame(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT), include_alpha=TRUE))", df, tol=0.05)
+
+  df0 <- structure(list(beta = 0.742511314624065, rho = -0.0275437658638479, 
+    sigma_M = 0.813095055217725, sigma_R = 0.808578327606414, 
+    M0 = 0, R0 = 14.9933286994785, beta.se = 0.0560546241014983, 
+    rho.se = 0.17155905646127, sigma_M.se = 0.107698809017417, 
+    sigma_R.se = 0.108177642504822, M0.se = NA_real_, R0.se = NA_real_, 
+    negloglik = 432.520303570585, pvmr = 0.675291879436992), .Names = c("beta", 
+      "rho", "sigma_M", "sigma_R", "M0", "R0", "beta.se", "rho.se", 
+      "sigma_M.se", "sigma_R.se", "M0.se", "R0.se", "negloglik", "pvmr"
+    ), row.names = "beta_BRENT", class = "data.frame")
+  test("as.data.frame(partialCI:::fit.pci(as.zoo(OIL$WTI), as.zoo(OIL$BRENT)))", df0, tol=0.05)
 }
 
 test_pci <- function (fast_only=FALSE) {

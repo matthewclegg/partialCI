@@ -32,25 +32,6 @@
 #       R CMD install partialCI.tar.gz
 # 9.  Delete the temporary directories samples/ and tables/
 
-# This file builds and loads various pre-computed tables that have been
-# generated to calibrate the likelihood ratio tests.  The steps to rebuild
-# the tables are as follows:
-#
-# 1.  Start R
-# 2.  Load the partialCI package
-# 3.  Create the list of samples and likelihood tables by entering the 
-#     following command:
-#       partialCI:::build_lrtables()
-#     On my Macbook Pro, this takes about a week to run.
-# 4.  Reload the set of likelihood tables:
-#       partialCI:::load_lrtables()
-# 5.  Regenerate the lrdata.R file
-#       partialCI:::dump_lrtables
-# 6.  Locate the lrdata.R file on disk and move it to the partialCI
-#     source code directory.
-# 7.  
-
-
 # if(getRversion() >= "2.15.1")  utils::globalVariables(c("PAR.SAMPLES",
 #  "PAR.JOINT.CRITICAL.VALUES.DT",
 #  "PAR.JOINT.CRITICAL.VALUES.KPSS.DT",

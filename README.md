@@ -4,9 +4,9 @@ R package for fitting the partially cointegrated model
 A collection of time series is said to be partially cointegrated if they have a linear
 combination that is partially autoregressive, e.g., that can be represented as a sum of an
 autoregressive series without unit roots and a random walk.  
-In other words, the series are partially cointegrated if the spread between
-them is a mean-reverting series that has possibly been contaminated with a 
-(hopefully small) random walk.
+If a collection of time series is partially cointegrated, then the spread between
+them can be interepreted as a mean-reverting series that has possibly been 
+contaminated with a (hopefully small) random walk.
 This may be useful in modeling
 certain sets of financial time series.
 

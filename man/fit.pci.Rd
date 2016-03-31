@@ -11,7 +11,8 @@ fit.pci(Y, X,
   pci_opt_method = c("jp", "twostep"), 
   par_model = c("par", "ar1", "rw"), 
   lambda = 0, 
-  robust = FALSE, nu = 5)
+  robust = FALSE, nu = 5,
+  include_alpha=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,6 +50,9 @@ If \code{TRUE}, then the residuals are assumed to follow a t-distribution with
 }
   \item{nu}{
 The degrees-of-freedom parameter to be used in robust estimation.  Default: 5.
+}
+\item{include_alpha}{If TRUE, then a constant term is estimated with the model.
+If FALSE, the constant term is omitted.  Default: \code{FALSE}.
 }
 }
 \details{
@@ -100,6 +104,12 @@ found through the two-step procedure.  Because of this, the joint-penalty method
 is guaranteed to find parameter values which give a likelihood score at least
 as good as those found using the two-step procedure.  Sometimes the improvement
 over the two-step procedure is substantial.
+
+The parameter \code{include_alpha} determines whether or not a constant term
+is included with the fit.  Note that the model \code{alpha = a, R0 = 0} is
+equivalent to the model \code{alpha = 0, R0 = a}.  Thus, the constant term can
+be interpreted as an estimate of the mean of the system at time \code{t=0}.  
+As the random walk evolves, the mean will drift correspondingly.
 }
 \value{
 An object of class \code{pci.fit} containing the fit that was found.  The following components
