@@ -14,7 +14,6 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 
-
 fit.pci.twostep <- function (Y, X, par_model=c("par", "ar1", "rw"), robust=FALSE, nu=5,
   include_alpha=FALSE) {
   #  On input, Y is an n x 1 column vector, and X is an n x k matrix.
@@ -185,9 +184,9 @@ fit.pci.jointpenalty <- function (Y, X,
   par_model <- match.arg(par_model)
 
   if (include_alpha) {
-    fit.pci.jointpenalty.a (Y, X, lambda, p0, robust, nu, pgtol)
+    fit.pci.jointpenalty.a (Y, X, lambda, p0, robust, nu)
   } else {
-    fit.pci.jointpenalty.a0 (Y, X, lambda, p0, robust, nu, pgtol)
+    fit.pci.jointpenalty.a0 (Y, X, lambda, p0, robust)
   }
 }
 
@@ -252,7 +251,13 @@ fit.pci <- function (Y, X,
   
 }
 
-print.pci.fit <- function (A) {
+print.pci.fit <- function (x, ...) {
+  # Given a PCI structure A, prints it in summary form
+  print.internal.pci.fit(x)
+}
+
+
+print.internal.pci.fit <- function (A, ...) {
     # Prints a PCI fit
     cat("Fitted values for PCI model\n")
     if ("alpha" %in% names(A)) {
@@ -330,9 +335,19 @@ statehistory.pci <- function(A, data=A$data, basis=A$basis) {
     df
 }
 
-plot.pci.fit <- function (A) {
+plot.pci.fit <- function (x, ...) {
+  # Given a PCI structure A, plots it.
+  
+  plot.internal.pci.fit(x)
+}
+
+plot.internal.pci.fit <- function (A, ...) {
     # Plots an partially cointegrated model
     
+  # Initial definition for Date, Value, Label
+  Date <- Value <- Label<- NULL
+  
+  
     sh <- statehistory.pci(A)
     n <- nrow(sh)
     RW <- sh$Yhat + sh$R
@@ -393,7 +408,13 @@ plot.pci.fit <- function (A) {
     
 }
 
-as.data.frame.pci.fit <- function (A) {
+as.data.frame.pci.fit <- function (x, row.names, optional, ...) {
+  as.data.frame.internal.pci.fit (x)
+}
+
+
+
+as.data.frame.internal.pci.fit <- function (A, ...) {
     # Given an partially cointegrated model A, converts it into a one row data.frame
     # containing the following values from the model:
     #   alpha

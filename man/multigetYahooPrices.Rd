@@ -30,11 +30,16 @@ one column per price series.
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 
 \seealso{\code{\link[TTR]{getYahooData}}
 }
 \examples{
+\dontrun{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
@@ -42,4 +47,5 @@ Matthew Clegg \email{matthewcleggphd@gmail.com}
 ### Note: you must have a working internet
 ### connection for these examples to work!
 spy.voo <- multigetYahooPrices(c("SPY","VOO"))
+}
 }

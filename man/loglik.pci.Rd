@@ -83,13 +83,17 @@ is then computed and returned.
 The log of the likelihood score of the Kalman filter
 }
 \references{
-  Clegg, Matthew.
+  Clegg, Matthew, 2015.
   Modeling Time Series with Both Permanent and Transient Components
   using the Partially Autoregressive Model.
   \emph{Available at SSRN: http://ssrn.com/abstract=2556957}
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link[egcm:egcm]{egcm}} Engle-Granger cointegration model

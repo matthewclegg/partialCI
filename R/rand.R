@@ -56,4 +56,3 @@ rpci <- function (n, alpha, beta, sigma_C, rho, sigma_M, sigma_R,
     }
     DF
 }
-

@@ -35,6 +35,10 @@ If a robust fit was used, then one of the following values is returned:
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link{fit.pci}} Fits a partially cointegrated model
@@ -43,6 +47,7 @@ Matthew Clegg \email{matthewcleggphd@gmail.com}
   versus a null model
 }
 \examples{
+\dontrun{
 # The following should usually return "PCI"
 YX <- rpci(n=1000, alpha=1, beta=c(2,3), sigma_C=c(0.1,0.1), rho=0.8, sigma_M=1, sigma_R=1)
 which.hypothesis.pcitest(test.pci(YX[,1], YX[,2:ncol(YX)]))
@@ -54,6 +59,7 @@ which.hypothesis.pcitest(test.pci(YX.rw[,1], YX.rw[,2:ncol(YX.rw)]))
 # The following should usually return "AR1"
 YX.mr <- rpci(n=1000, alpha=1, beta=c(2,3), sigma_C=c(0.1,0.1), rho=0.8, sigma_M=1, sigma_R=0)
 which.hypothesis.pcitest(test.pci(YX.mr[,1], YX.mr[,2:ncol(YX.mr)]))
+}
 }
 \keyword{ ts }
 \keyword{ models }

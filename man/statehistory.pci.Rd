@@ -40,6 +40,10 @@ Returns a \code{data.frame} with the following columns:
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link[egcm:egcm]{egcm}} Engle-Granger cointegration model

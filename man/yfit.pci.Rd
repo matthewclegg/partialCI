@@ -32,6 +32,10 @@ was found.
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 
 \seealso{

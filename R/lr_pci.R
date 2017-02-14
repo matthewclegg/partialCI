@@ -16,8 +16,161 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 
+utils::globalVariables(c("PCI.SAMPLES", "PCI.SAMPLES.DT"))
 
 pci.nu.default <- function () 5
+
+par.nu.default <- function () {
+  # The default value to be used for the degrees of freedom parameter
+  # when using robust estimation.
+  
+  5
+}
+
+
+loglik.par.fkf <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1]) {
+  # Given a sequence Y and a parameterization (rho, sigma_M, sigma_R) of an
+  # associated PAR process, calculates the negative log likelihood that
+  # Y would be observed under these process parameters.  
+  
+  if (length(Y) < 1) return(NA_real_)
+  if (length(dim(Y)) > 0) Y <- Y[,1]
+  Y <- coredata(Y)
+  
+  M0 <- as.numeric(M0)
+  R0 <- as.numeric(R0)
+  
+  a0 <- c(M0, R0)
+  dt <- matrix(0, 2, 1)
+  ct <- matrix(0, 1, 1)
+  Zt <- matrix(c(1, 1), 1, 2)
+  GGt <- matrix(0, 1, 1)
+  P0 <- matrix(c(sigma_M^2, 0, 0, sigma_R^2), 2, 2)
+  Tt <- matrix(c(rho, 0, 0, 1), 2, 2)
+  HHt <- matrix(c(sigma_M^2, 0, 0,sigma_R^2), 2, 2)
+  
+  sp <- list(a0 = a0, P0 = P0, ct = ct, dt = dt, Zt = Zt, Tt = Tt, 
+             GGt = GGt, HHt=HHt)
+  
+  ans <- fkf(a0 = sp$a0, P0 = sp$P0, dt = sp$dt, ct = sp$ct, Tt = sp$Tt,
+             Zt = sp$Zt, HHt = sp$HHt, GGt = sp$GGt, yt = rbind(Y))
+  
+  #    cat("Kalman gain = ", ans$Kt, "\n")         
+  -ans$logLik 
+}
+
+loglik.par.ss <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1]) {
+  # Given a sequence Y and a parametrization (rho, sigma_M, sigma_R) of an 
+  # associated PAR process, calculates the negative log likelihood that Y would
+  # be observed under these process parameters, using a steady state 
+  # Kalman filter.
+  #
+  # Despite the fact that this is hand-coded, the likelihood function that uses
+  # the fast kalman filter implementation given above is about twice as fast,
+  # even after turning on the byte compiler.  
+  
+  if (length(dim(Y)) > 0) Y <- Y[,1]
+  Y <- coredata(Y)
+  
+  M0 <- as.numeric(M0)
+  R0 <- as.numeric(R0)
+  
+  n <- length(Y)
+  if (n < 1) return(NA_real_)
+  
+  K <- kalman.gain.par(rho, sigma_M, sigma_R)
+  esumsq <- 0
+  M <- M0
+  R <- R0
+  tvar <- sigma_M^2 + sigma_R^2
+  
+  for (i in 1:n) {
+    xhat <- rho * M + R
+    e <- Y[i] - xhat
+    esumsq <- esumsq + e*e
+    M <- rho * M + e * K[1]
+    R <- R + e * K[2]
+  }
+  
+  nll <- (n/2)*log(tvar * 2*pi) + esumsq/(2*tvar)
+  
+  nll
+}
+
+llst <- function(X, mu, sigma, df) {
+  # Computes the negative log likelihood that (X - mu)/sigma is distributed
+  # according to a t-distribution with df degrees of freedom.
+  # Input values:
+  #   X:     Vector of observations whose likelihood is to be computed
+  #   mu:    The location parameter of the distribution
+  #   sigma: The scale parameter -- similar to standard deviation
+  #   df:    The degrees of freedom of the distribution
+  #
+  # This likelihood function has been optimized by computing the
+  # values of the gamma function and some other constants only once,
+  # rather than re-computing these values for each element of X.
+  # This results in a factor of 10 (or more) speedup over the
+  # naive implementation.
+  
+  if ((sigma <= 0) || (df <= 1) || (length(X) < 1)) return (NA_real_)
+  
+  # Following is the non-optimized version of the code:
+  #  D <- dt((X - mu) / sigma, df) / sigma
+  #  ll <- -sum(log(D))
+  #  return(ll)
+  
+  # Following is an equivalent optimized version:
+  N <- length(X)
+  C <- N * (lgamma((df+1)/2) - 0.5*log(df * pi) - lgamma(df/2) - log(sigma))
+  S <- -((df + 1)/2) * sum(log(1 + ((X-mu)/sigma)^2/df))
+  ll <- -(S+C)
+  ll
+}
+
+loglik.par.ss.t <- function (Y, rho, sigma_M, sigma_R, M0=0, R0=Y[1], nu=par.nu.default()) {
+  # Given a sequence Y and a parametrization (rho, sigma_M, sigma_R) of an 
+  # associated PAR process, calculates the negative log likelihood that Y would
+  # be observed under these process parameters, using a steady state 
+  # Kalman filter.
+  
+  if (length(dim(Y)) > 0) Y <- Y[,1]
+  Y <- coredata(Y)
+  
+  M0 <- as.numeric(M0)
+  R0 <- as.numeric(R0)
+  
+  K <- kalman.gain.par(rho, sigma_M, sigma_R)
+  if (is.na(K[1])) return(NA_real_)
+  
+  n <- length(Y)
+  if (n < 1) return(NA_real_)
+  esumsq <- 0
+  M <- M0
+  R <- R0
+  tvar <- sigma_M^2 + sigma_R^2
+  tsd <- sqrt(tvar)
+  
+  evec <- numeric(n)
+  for (i in 1:n) {
+    xhat <- rho * M + R
+    e <- Y[i] - xhat
+    evec[i] <- e
+    M <- rho * M + e * K[1]
+    R <- R + e * K[2]
+  }
+  
+  #    nll <- llst(evec, 0, tsd * sqrt((nu - 2) / nu), nu)
+  nll <- llst(evec, 0, tsd, nu)
+  
+  nll
+}
+
+
+
+
+
+
+
 
 loglik.pci.fkf <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0) {
     # Given a sequence Y, a basis X, and a parameterization 
@@ -31,7 +184,7 @@ loglik.pci.fkf <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0
       Z <- as.numeric(Y - X %*% beta - alpha)
     }
     if (missing(R0)) R0 <- Z[1]
-    partialAR:::loglik.par.fkf (Z, rho, sigma_M, sigma_R, M0, R0)
+    loglik.par.fkf (Z, rho, sigma_M, sigma_R, M0, R0)
 }
 
 loglik.pci.ss <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0) {
@@ -47,7 +200,7 @@ loglik.pci.ss <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0)
       Z <- as.numeric(Y - X %*% beta - alpha)
     }
     if (missing(R0)) R0 <- Z[1]
-    partialAR:::loglik.par.ss (Z, rho, sigma_M, sigma_R, M0, R0)
+    loglik.par.ss (Z, rho, sigma_M, sigma_R, M0, R0)
 }
 
 loglik.pci.css <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0) {
@@ -63,7 +216,7 @@ loglik.pci.css <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0
       Z <- as.numeric(Y - X %*% beta - alpha)
     }
     if (missing(R0)) R0 <- Z[1]
-    partialAR:::loglik_par_c (Z, rho, sigma_M, sigma_R, M0, R0)
+    loglik_par_c (Z, rho, sigma_M, sigma_R, M0, R0)
 }
 
 loglik.pci.sst <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0, nu=pci.nu.default()) {
@@ -79,7 +232,7 @@ loglik.pci.sst <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0
       Z <- as.numeric(Y - X %*% beta - alpha)
     }
     if (missing(R0)) R0 <- Z[1]
-    partialAR:::loglik.par.ss.t (Z, rho, sigma_M, sigma_R, M0, R0, nu=nu)
+    loglik.par.ss.t (Z, rho, sigma_M, sigma_R, M0, R0, nu=nu)
 }
 
 loglik.pci.csst <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0, nu=pci.nu.default()) {
@@ -95,7 +248,7 @@ loglik.pci.csst <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=
       Z <- as.numeric(Y - X %*% beta - alpha)
     }
     if (missing(R0)) R0 <- Z[1]
-    partialAR:::loglik_par_t_c (Z, rho, sigma_M, sigma_R, M0, R0, nu)
+    loglik_par_t_c (Z, rho, sigma_M, sigma_R, M0, R0, nu)
 }
 
 loglik.pci <- function (Y, X, alpha, beta, rho, sigma_M, sigma_R, M0=0, R0=0, 
@@ -245,6 +398,9 @@ pci.generate.likelihood_ratio.samples <- function (sample_dir = "samples",
 }
 
 pci.load.likelihood_ratio.samples <- function (sample_dir = "samples") {
+    
+    PCI.SAMPLES<-NULL
+    
     # Reads all of the samples in the specified samples dir, and returns
     # a data.frame containing the results
     
@@ -309,6 +465,8 @@ sample.pci.lrt.nullmr.likelihood_ratio <- function (n=500, rho=1.0, nrep=1000, n
 
 pci.find.joint.critical.values <- function (alpha, n=500, robust=FALSE, nest=TRUE,
                                             pci_opt_method=c("jp","twostep")) {
+  
+  
   # Given an acceptance value alpha (or a vector of such acceptance values), 
   # calculates likelihood scores Lambda_R and Lambda_M such that the probability
   # is no more than alpha that a random sample will have likelihood ratio for the 
@@ -320,6 +478,7 @@ pci.find.joint.critical.values <- function (alpha, n=500, robust=FALSE, nest=TRU
   probust <- robust
   rw <- NULL  # Make R CMD check happy
   mr <- NULL  # Make R CMD check happy
+  PCI.SAMPLES.DT<-NULL
   sigma_M <- NULL
   sigma_R <- NULL
   pci_opt <- NULL 
@@ -628,7 +787,12 @@ test.pci <- function (Y,
         class = c("pcitest", "htest"))
 }
 
-print.pcitest <- function (AT, alpha=0.05) {
+print.pcitest <- function (x, ...) {
+
+  print.pcitest.internal (x, ...)
+}
+
+print.pcitest.internal <- function (AT, alpha=0.05, ...) {
   # See stats:::print.htest
   cat("\n")
   cat(strwrap(AT$method, prefix = "\t"), sep = "\n")

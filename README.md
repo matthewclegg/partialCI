@@ -129,9 +129,16 @@ portfolio.  The final fit is
 For this fit, the proportion of variance attributable to the mean reverting
 component is 66.2%, and the half life of mean reversion is about 2.2 days.
 
-Please feel free to write to me if you have questions or suggestions.
+Please feel free to write to us if you have questions or suggestions.
 
 Matthew Clegg  
 matthewcleggphd@gmail.com  
-Jan 7, 2016  
+
+Christopher Krauss
+christopher.krauss@fau.de
+
+Jonas Rende 
+jonas.rende@fau.de
+
+Feb 13, 2017  
 

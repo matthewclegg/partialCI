@@ -14,6 +14,7 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 
+utils::globalVariables("p0")
 
 fit.pci.twostep.a <- function (Y, X, par_model=c("par", "ar1", "rw"), robust=FALSE, nu=5) {
   #  On input, Y is an n x 1 column vector, and X is an n x k matrix.

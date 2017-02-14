@@ -59,13 +59,17 @@ is guaranteed to be negative.
 \value{The log of the ratio of the likelihoods of the two models.
 }
 \references{
-  Clegg, Matthew.
+  Clegg, Matthew, 2015.
   Modeling Time Series with Both Permanent and Transient Components
   using the Partially Autoregressive Model.
   \emph{Available at SSRN: http://ssrn.com/abstract=2556957}
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link{fit.pci}} Fitting partially cointegrated models

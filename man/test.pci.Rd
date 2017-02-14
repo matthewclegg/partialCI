@@ -63,9 +63,25 @@ this table is not unique.
 }
 \value{An object of class \code{"pcitest"} containing the
 results of the hypothesis test.
+
 }
+
+\references{
+  Clegg, Matthew, 2015.
+  Modeling Time Series with Both Permanent and Transient Components
+  using the Partially Autoregressive Model.
+  \emph{Available at SSRN: http://ssrn.com/abstract=2556957}
+  
+  Clegg, Matthew and Krauss, Christopher, 2016. Pairs trading with partial cointegration. FAU Discussion Papers in Economics, University of Erlangen-Nuernberg. 
+  \emph{Available at https://www.iwf.rw.fau.de/files/2016/05/05-2016.pdf}    
+}
+
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link{fit.pci}} Fits a partially cointegrated model
@@ -75,6 +91,8 @@ Matthew Clegg \email{matthewcleggphd@gmail.com}
 }
 \examples{
 # The following should reject both the random walk and AR(1) models
+
+\dontrun{
 YX <- rpci(n=1000, alpha=1, beta=c(2,3), sigma_C=c(0.1,0.1), rho=0.8, sigma_M=1, sigma_R=1)
 test.pci(YX[,1], YX[,2:ncol(YX)])
 
@@ -85,6 +103,7 @@ test.pci(YX.rw[,1], YX.rw[,2:ncol(YX.rw)])
 # The following should reject the random walk model and accept the AR(1) model
 YX.mr <- rpci(n=1000, alpha=1, beta=c(2,3), sigma_C=c(0.1,0.1), rho=0.8, sigma_M=1, sigma_R=0)
 test.pci(YX.mr[,1], YX.mr[,2:ncol(YX.mr)])
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

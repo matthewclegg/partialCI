@@ -2,13 +2,41 @@ Package: partialCI
 Type: Package
 Title: Partial Cointegration
 Version: 1.1.0
-Date: 2016-03-31
-Authors@R: c(person("Matthew", "Clegg", role=c("aut","cre","cph"),
-                    email="matthewcleggphd@gmail.com"))
-Description: A collection of time series is said to be partially cointegrated if they have a linear combination that is partially autoregressive, e.g., that can be represented as a sum of an autoregressive series without unit roots and a random walk.  This may be useful in modeling certain sets of financial time series.
+Date: 2017-02-13
+Authors@R: c(person("Matthew", "Clegg", role=c("aut"),
+                    email="matthewcleggphd@gmail.com"),
+            person("Christopher", "Krauss", role=c("aut"),
+                    email="christopher.krauss@fau.de"),
+            person("Jonas", "Rende", role=c("cre","aut"),
+                    email="jonas.rende@fau.de"))
+Author: Matthew Clegg [aut],
+    Christopher Krauss [aut],
+    Jonas Rende [cre, aut]
+Maintainer: Jonas Rende <jonas.rende@fau.de>
+Description: A collection of time series is said to be partially cointegrated
+    if they have a linear combination that is partially autoregressive, e.g., that
+    can be represented as a sum of an autoregressive series without unit roots and
+    a random walk. This may be useful in modeling certain sets of financial time
+    series.
 License: GPL-2 | GPL-3
 Depends: partialAR
-Imports: zoo, xts, parallel, ggplot2, grid, MASS, tseries, TTR,
-        data.table, glmnet
-Suggests: egcm
-
+Imports:
+    zoo,
+    parallel,
+    ggplot2,
+    grid,	
+    MASS,
+    TTR,
+    data.table,
+    glmnet,
+    methods,
+    Rcpp,
+    FKF,
+    xts
+Suggests:
+    egcm,
+    knitr,
+    rmarkdown
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+LinkingTo: Rcpp

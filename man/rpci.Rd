@@ -70,6 +70,10 @@ are \code{y, F_1, F_2, ..., F_k}.  If include.state is \code{TRUE}, returns an
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 
 \seealso{

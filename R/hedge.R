@@ -185,12 +185,24 @@ hedge.pci <- function (Y, X,
     fit
 }
 
-print.pci.hedge <- function (AH) {
+print.pci.hedge <- function (x, ...) {
+  
+  print.internal.pci.hedge(x)
+}
+
+print.internal.pci.hedge <- function (AH) {
     # Prints summary information for an partially cointegrated hedge model
     print(AH$pci)
 }
 
-plot.pci.hedge <- function (AH) {
+plot.pci.hedge <- function (x, ...) {
+ 
+  
+  plot.internal.pci.hedge(x)
+}
+
+
+plot.internal.pci.hedge <- function (AH) {
     plot(AH$pci)
 }
 

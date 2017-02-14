@@ -44,6 +44,8 @@
 # if (!exists("PAR.JOINT.CRITICAL.VALUES.DT")) PAR.JOINT.CRITICAL.VALUES.DT <- NULL
 # if (!exists("PAR.JOINT.CRITICAL.VALUES.KPSS.DT")) PAR.JOINT.CRITICAL.VALUES.KPSS.DT <- NULL
 
+utils::globalVariables(c("PCI.SAMPLES"))
+
 LR_TABLES_LIST <- c("PCI.RWNULL.JP.LRQT", 
                     "PCI.MRNULL.JP.LRQT",
                     "PCI.RWNULL.ROB.JP.LRQT", 
@@ -65,7 +67,10 @@ build_lrtables <- function (dir="tables", debug=FALSE, nrep=10000, rebuild_sampl
   # where they can then be loaded back into R and used to update
   # this file.
   
-  if (debug) {
+  # Initial definition for PCI.Samples
+  PCI.SAMPLES<-NULL
+ 
+   if (debug) {
     nr <- 1
   } else {
     nr <- nrep
@@ -75,6 +80,7 @@ build_lrtables <- function (dir="tables", debug=FALSE, nrep=10000, rebuild_sampl
     cat("Rebuilding PCI likelihood ratio samples ...\n")
     pci.generate.likelihood_ratio.samples(nrep=nrep)
   }
+  
   pci.load.likelihood_ratio.samples()
   SAMPLES <- PCI.SAMPLES
   

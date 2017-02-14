@@ -142,6 +142,10 @@ Returns an S3 object of class \code{pci.hedge} containing the following fields
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link{fit.pci}} Fitting of partially cointegrated models
@@ -155,11 +159,11 @@ Matthew Clegg \email{matthewcleggphd@gmail.com}
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
-YX <- rpci(n=1000, alpha=1, beta=c(2,3,4,5,6), 
+\dontrun{YX <- rpci(n=1000, alpha=1, beta=c(2,3,4,5,6), 
   sigma_C=c(0.1,0.1,0.1,0.1,0.1), rho=0.9, sigma_M=1, sigma_R=1)
 YXC <- cbind(YX, matrix(rnorm(5000), ncol=5))
 hedge.pci(YX[,1], YX[,2:ncol(YX)])
-hedge.pci(YXC[,1], YXC[,2:ncol(YXC)])
+hedge.pci(YXC[,1], YXC[,2:ncol(YXC)])}
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

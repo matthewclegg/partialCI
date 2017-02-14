@@ -3,7 +3,7 @@
 \alias{partialCI}
 \docType{package}
 \title{
-\packageTitle{partialCI} % Partial Cointegration Models
+Partial Cointegration
 }
 \description{
 A collection of time series is said to be partially cointegrated if they have a linear
@@ -115,14 +115,18 @@ by also adding XLI (industrials) to the hedging portfolio. The final fit is
 For this fit, the proportion of variance attributable to the mean reverting 
 component is 66.2\%, and the half life of mean reversion is about 2.2 days.
 
-Please feel free to write to me if you have questions or suggestions.
+Please feel free to contact us if you have questions or suggestions.
 
-Matthew Clegg  
+Matthew Clegg, Christopher Krauss and Jonas Rende
 
-Jan 7, 2016
+Feb 13, 2017
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 
 \seealso{

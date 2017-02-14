@@ -121,6 +121,7 @@ may be of interest
 \item{rho}{The estimated coefficient of mean reversion}
 \item{rho.se}{The standard error of \code{rho}}
 \item{negloglik}{The negative of the log likelihood}
+\item{pvmr}{The proportion of variance attributable to mean reversion}
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -128,13 +129,20 @@ may be of interest
 %% ...
 }
 \references{
-  Clegg, Matthew.
+  Clegg, Matthew, 2015.
   Modeling Time Series with Both Permanent and Transient Components
   using the Partially Autoregressive Model.
   \emph{Available at SSRN: http://ssrn.com/abstract=2556957}
+  
+  Clegg, Matthew and Krauss, Christopher, 2016. Pairs trading with partial cointegration. FAU Discussion Papers in Economics, University of Erlangen-Nuernberg. 
+  \emph{Available at https://www.iwf.rw.fau.de/files/2016/05/05-2016.pdf}    
 }
 \author{
 Matthew Clegg \email{matthewcleggphd@gmail.com}
+
+Christopher Krauss \email{christopher.krauss@fau.de}
+
+Jonas Rende \email{jonas.rende@fau.de}
 }
 \seealso{
 \code{\link[egcm:egcm]{egcm}} Engle-Granger cointegration model
@@ -146,7 +154,8 @@ Matthew Clegg \email{matthewcleggphd@gmail.com}
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
-YX <- rpci(n=1000, alpha=1, beta=c(2,3,4), sigma_C=c(1,1,1), rho=0.9, sigma_M=0.1, sigma_R=0.2)
+
+YX <- rpci(n=1000, alpha=1, beta=c(2,3,4), sigma_C=c(1,1,1), rho=0.9,sigma_M=0.1, sigma_R=0.2)
 fit.pci(YX[,1], YX[,2:ncol(YX)])
 
 }
