@@ -132,13 +132,16 @@ component is 66.2%, and the half life of mean reversion is about 2.2 days.
 Please feel free to write to us if you have questions or suggestions.
 
 Matthew Clegg  
+
 matthewcleggphd@gmail.com  
 
 Christopher Krauss
+
 christopher.krauss@fau.de
 
 Jonas Rende 
+
 jonas.rende@fau.de
 
-Feb 13, 2017  
+Feb 19, 2017  
 
