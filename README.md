@@ -1,16 +1,12 @@
 # partialCI
 R package for fitting the partially cointegrated model
 
-A collection of time series is said to be partially cointegrated if they have a linear
-combination that is partially autoregressive, e.g., that can be represented as a sum of an
-autoregressive series without unit roots and a random walk.  
+A collection of time series is partially cointegrated if a linear combination of these time series can be found so that the residual spread is partially autoregressive - meaning that it can be represented as a sum of an autoregressive series and a random walk. This concept is useful in modeling certain sets of financial time series and beyond, as it allows for the spread to contain transient and permanent components alike. Partial cointegration has been introduced by Clegg and Krauss (2016) <http://hdl.handle.net/10419/140632>, along with a large-scale empirical application to financial market data. The partialCI package comprises estimation, testing, and simulation routines for partial cointegration models in state space. Clegg et al. (2017) <http://hdl.handle.net/10419/150014> provide an in in-depth discussion of the package functionality as well as illustrating examples in the fields of finance and macroeconomics.
 If a collection of time series is partially cointegrated, then the spread between
 them can be interepreted as a mean-reverting series that has possibly been 
 contaminated with a (hopefully small) random walk.
-This may be useful in modeling
-certain sets of financial time series.
 
-To use the partialCI package, you will need to start by installing it,
+The developer version can be find on Github. To use the developer version of the partialCI package, you will need to start by installing it,
 which can be done using devtools:
 
 ```
@@ -131,7 +127,6 @@ component is 66.2%, and the half life of mean reversion is about 2.2 days.
 
 Please feel free to write to us if you have questions or suggestions.
 
-
 Matthew Clegg  
 
 matthewcleggphd@gmail.com  
@@ -144,5 +139,5 @@ Jonas Rende
 
 jonas.rende@fau.de
 
-Feb 19, 2017  
+April 21, 2017  
 

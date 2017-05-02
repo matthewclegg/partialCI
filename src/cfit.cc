@@ -20,6 +20,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
+
+
+
 double lagged_variance_c (NumericVector X, int k, int n) {
     // Computes the variance of (1-B^k)X[(k+1)..n]
     
@@ -38,6 +41,7 @@ double lagged_variance_c (NumericVector X, int k, int n) {
 }
 
 // [[Rcpp::export]]
+
 double estimate_rho_par_c (NumericVector X) {
 //	Computes an estimate of mean reversion for the mean-reverting
 //	portion of a PAR process.  If v[k] = Var[X[t+k]-X[t]], then
@@ -59,6 +63,7 @@ double estimate_rho_par_c (NumericVector X) {
 }
 
 // [[Rcpp::export]]
+
 NumericVector estimate_par_c (NumericVector X, double rho_max = 1.0) {
     /* Estimates the parameters of an partially AR(1) sequence using the 
        variances of the differences.  On input, X is an array of doubles,
@@ -95,6 +100,7 @@ NumericVector estimate_par_c (NumericVector X, double rho_max = 1.0) {
 }
 
 // [[Rcpp::export]]
+
 double pvmr_par_c(double rho, double sigma_M, double sigma_R) {
     // Returns the proportion of variance attributable to mean reversion
     // for a PAR process with parameters rho, sigma_M and sigma_R
@@ -111,6 +117,7 @@ double pvmr_par_c(double rho, double sigma_M, double sigma_R) {
 }
 
 // [[Rcpp::export]]
+
 double kalman_gain_par_mr (double rho, double sigma_M, double sigma_R) {
     // Computes the values of the steady state Kalman gain K_mr
     // of the mean-reverting portion of the state equation
@@ -138,6 +145,7 @@ double kalman_gain_par_mr (double rho, double sigma_M, double sigma_R) {
 }
 
 // [[Rcpp::export]]
+
 double loglik_par_c (NumericVector Y, double rho, double sigma_M, double sigma_R, double M0, double R0) {
     /* Computes the log likelihood of Y given parameters p using
        a steady state Kalman filter.  Returns the negative log
@@ -173,6 +181,7 @@ double loglik_par_c (NumericVector Y, double rho, double sigma_M, double sigma_R
 }
 
 // [[Rcpp::export]]
+
 double loglik_par_t_c (NumericVector Y, double rho, double sigma_M, double sigma_R, 
     double M0, double R0, double nu=5.0) {
     /* Computes the log likelihood of Y given parameters p using

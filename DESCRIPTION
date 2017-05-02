@@ -2,7 +2,7 @@ Package: partialCI
 Type: Package
 Title: Partial Cointegration
 Version: 1.1.0
-Date: 2017-02-13
+Date: 2017-04-21
 Authors@R: c(person("Matthew", "Clegg", role=c("aut"),
                     email="matthewcleggphd@gmail.com"),
             person("Christopher", "Krauss", role=c("aut"),
@@ -13,18 +13,15 @@ Author: Matthew Clegg [aut],
     Christopher Krauss [aut],
     Jonas Rende [cre, aut]
 Maintainer: Jonas Rende <jonas.rende@fau.de>
-Description: A collection of time series is said to be partially cointegrated
-    if they have a linear combination that is partially autoregressive, e.g., that
-    can be represented as a sum of an autoregressive series without unit roots and
-    a random walk. This may be useful in modeling certain sets of financial time
-    series.
+Description: A collection of time series is partially cointegrated if a linear combination of these time series can be found so that the residual spread is partially autoregressive - meaning that it can be represented as a sum of an autoregressive series and a random walk. This concept is useful in modeling certain sets of financial time series and beyond, as it allows for the spread to contain transient and permanent components alike. Partial cointegration has been introduced by Clegg and Krauss (2016) <https://hdl.handle.net/10419/140632>, along with a large-scale empirical application to financial market data. The partialCI package comprises estimation, testing, and simulation routines for partial cointegration models in state space. Clegg et al. (2017) <https://hdl.handle.net/10419/150014> provide an in in-depth discussion of the package functionality as well as illustrating examples in the fields of finance and macroeconomics.
 License: GPL-2 | GPL-3
-Depends: partialAR
+Depends:
+    partialAR
 Imports:
     zoo,
     parallel,
     ggplot2,
-    grid,	
+    grid,
     MASS,
     TTR,
     data.table,

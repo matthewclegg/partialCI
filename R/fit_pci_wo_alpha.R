@@ -16,6 +16,8 @@
 
 utils::globalVariables("p0")
 
+
+
 fit.pci.twostep.a0 <- function (Y, X, par_model=c("par", "ar1", "rw"), robust=FALSE, nu=5) {
   #  On input, Y is an n x 1 column vector, and X is an n x k matrix.
   #  Fits the model

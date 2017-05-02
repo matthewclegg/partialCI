@@ -1,6 +1,5 @@
 # Functions pertaining to fitting partially cointegrated (PCI) series
 # Copyright (C) 2016 Matthew Clegg
-
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation; either version 2 of the License, or
@@ -255,7 +254,6 @@ print.pci.fit <- function (x, ...) {
   # Given a PCI structure A, prints it in summary form
   print.internal.pci.fit(x)
 }
-
 
 print.internal.pci.fit <- function (A, ...) {
     # Prints a PCI fit
