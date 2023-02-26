@@ -19,10 +19,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+const double kPi = 3.14159265358979323846;
+
 // [[Rcpp::export]]
-
-
-
 double lagged_variance_c (NumericVector X, int k, int n) {
     // Computes the variance of (1-B^k)X[(k+1)..n]
     
@@ -176,7 +175,7 @@ double loglik_par_c (NumericVector Y, double rho, double sigma_M, double sigma_R
         R += e * K_rw;
     }
     
-    double nll = (n/2.0)*log(tvar * 2.0*PI) + esumsq/(2.0*tvar);
+    double nll = (n/2.0)*log(tvar * 2.0*kPi) + esumsq/(2.0*tvar);
     return nll;
 }
 
@@ -208,7 +207,7 @@ double loglik_par_t_c (NumericVector Y, double rho, double sigma_M, double sigma
 //    double tvar = (sigma_M*sigma_M + sigma_R*sigma_R) * (nu - 2.0) / nu;
     double tvar = (sigma_M*sigma_M + sigma_R*sigma_R);
     double tsd = sqrt(tvar);
-    double const_term = n * (lgamma((nu+1.0)*0.5) - 0.5*log(nu * PI) - 
+    double const_term = n * (lgamma((nu+1.0)*0.5) - 0.5*log(nu * kPi) - 
         lgamma(nu*0.5) - log(tsd));
     
     for (int i=0; i < n; i++) {
